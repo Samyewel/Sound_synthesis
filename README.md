@@ -1,6 +1,15 @@
 # Programmed digital synthesiser
 # By swilliam & wdonnell
 
+To install libraries:
+
+brew install portaudio
+
+brew link portaudio
+
+pip3 install --global-option='build_ext' --global-option='-I/Users/YOURINTRAUSERHERE/.brew/Cellar/portaudio/19.7.0/include' --global-option='-L/Users/YOURINTRAUSERHERE/.brew/Cellar/portaudio/19.7.0/lib' pyaudio
+
+
 Instructions
 The objective of this rush is to create a tool called minisynth, able to read in a specific music description file format (see next sections), and to play it.
 
