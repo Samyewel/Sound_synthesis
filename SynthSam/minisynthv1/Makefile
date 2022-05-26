@@ -3,10 +3,10 @@ NAME = minisynth
 HEADER = includes
 
 SOURCE_FOLDER = src/
-FILES = minisynth, playback
+FILES = minisynth playback
 
-SOURCE_FILES = $(patsubst %, $(SOURCE_FOLDER)%.c, $(SOURCE_FILES))
-OBJECT_FILES = $(patsubst %, %.o, $(SOURCE_FILES))
+SOURCE_FILES = $(patsubst %, $(SOURCE_FOLDER)%.c, $(FILES))
+OBJECT_FILES = $(patsubst %, %.o, $(FILES))
 
 Flags = -Wall -Wextra -Werror
 

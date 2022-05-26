@@ -10,9 +10,10 @@ device and can be used independently of it. This example only plays back a singl
 back multiple files by simple loading multiple decoders and mixing them (do not create multiple devices to do this). See
 the simple_mixing example for how best to do this.
 */
-#include "minisynth.h"
+#include "../include/minisynth.h"
+#include "../include/miniaudio.h"
 
-void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount)
+static void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount)
 {
     ma_decoder* pDecoder = (ma_decoder*)pDevice->pUserData;
     if (pDecoder == NULL) {
