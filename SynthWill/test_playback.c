@@ -11,7 +11,7 @@ back multiple files by simple loading multiple decoders and mixing them (do not 
 the simple_mixing example for how best to do this.
 */
 #define MINIAUDIO_IMPLEMENTATION
-#include "mini_aud/miniaudio.h"
+#include "miniaudio.h"
 
 #include <stdio.h>
 

@@ -29,12 +29,28 @@ void add_note(double frequency, double duration, int vol, FILE *f)
 {
 	int length = (int)(duration * 44100.0);
 	short waveform[length];
+	//short s1;
+	//short s2;
 	int i;
 
 	for(i=1; i < length; i++) 
 	{
 		double t = (double) i / WAVFILE_SAMPLES_PER_SECOND;
-		waveform[i] = vol*sin(frequency*t*2*M_PI);
+		//sine
+		//waveform[i] = vol*sin(frequency*t*2*M_PI);
+
+
+		//square
+		waveform[i] = sin(frequency*t*2*M_PI) > 0 ? vol * 1.0 : vol * -1.0;
+		//if (sin(frequency*t*2*M_PI) > 0)
+		//	waveform[i] = 1.0 * vol;
+		//else
+		//	waveform[i] = -1.0 * vol;
+
+		//triangle
+		//waveform[i] = vol * asin(sin(frequency*t*2*M_PI)) * (2.0 / M_PI);
+		
+	
 	}
 
 
@@ -113,14 +129,12 @@ int main(int ac, char **av)
 	//printf("%s\n", line);
 	inst1 = ft_strsplit(line, ' ');
 	int i = 1;
-	int j;
 	int octave = 1;
 	int key_num;
 	char **info;
 
 	while (inst1[i])
 	{
-		j = 0;
 		info = ft_strsplit(inst1[i], '/');
 		key_num = get_key_num(info[0], &octave, &vol);
 		if (info[1])
@@ -140,3 +154,27 @@ int main(int ac, char **av)
 }
 //gcc -Wall write_pcm.c wavfile/wavfile.c -L libft/ -lft -o test -lm && ./test Super_Mario.synth
 //./a.out sound.wav
+
+/*
+double w(double dHertz)
+{
+    return dHertz * 2.0 * PI;
+}
+
+// General purpose oscillator
+
+
+double osc(double dHertz, double dTime, int nType = OSC_SINE)
+{
+    switch (nType)
+    {
+    case OSC_SINE: // Sine wave bewteen -1 and +1
+        return sin(w(dHertz) * dTime);
+
+    case OSC_SQUARE: // Square wave between -1 and +1
+        return sin(w(dHertz) * dTime) > 0 ? 1.0 : -1.0;
+
+    case OSC_TRIANGLE: // Triangle wave between -1 and +1
+        return asin(sin(w(dHertz) * dTime)) * (2.0 / PI);
+}
+*/
