@@ -6,7 +6,7 @@
 /*   By: swilliam <swilliam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 14:23:20 by swilliam          #+#    #+#             */
-/*   Updated: 2022/05/26 18:31:39 by swilliam         ###   ########.fr       */
+/*   Updated: 2022/05/26 19:38:34 by swilliam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,22 @@
 #define MINISYNTH_H
 #define MINIAUDIO_IMPLEMENTATION
 
-#include <stdio.h>
-#include <string.h>
-#include <inttypes.h>
-#include <unistd.h>
+# include <stdio.h>
+# include <string.h>
+# include <stdarg.h>
+# include <stdlib.h>
+# include <fcntl.h>
+# include <inttypes.h>
+# include <unistd.h>
 
-static int tempo = 0;
-static int octave = 0;
+typedef struct s_minisynth
+{
+	double tempo;
+	int	tracks;
+}	t_minisynth;
+
+
+static double tempo = 0;
 /*
 const char **notes_octave = {"C0", "16.35160",
 							"C#0", "17.32391", "Db0", "17.32391",
@@ -142,6 +151,14 @@ const char **notes_octave = {"C0", "16.35160",
 
 const char **notes_base = {"C", "D", "E", "F", "G", "A", "B"};
 */
+
+void	end_process(char *error_message);
+
+/*
+** Write to wav file
+*/
+void write_wave(char *synthfile, t_minisynth *track_info);
+
 /*
 ** Playback
 */

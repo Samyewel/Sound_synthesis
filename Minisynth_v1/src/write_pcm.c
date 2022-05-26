@@ -20,6 +20,7 @@ Go ahead and modify this program for your own purposes.
 #include "../libft/includes/libft.h"
 #include "../libft/includes/get_next_line.h"
 #include "../include/wavfile.h"
+#include "../include/minisynth.h"
 
 const int NUM_SAMPLES = (WAVFILE_SAMPLES_PER_SECOND*2);
 
@@ -34,10 +35,7 @@ void add_note(double frequency, double duration, int vol, FILE *f)
 		double t = (double) i / WAVFILE_SAMPLES_PER_SECOND;
 		waveform[i] = vol*sin(frequency*t*2*M_PI);
 	}
-
-
 	wavfile_write(f,waveform,length);
-
 }
 
 int get_key_num(char *str, int *octave, int *vol)
@@ -87,7 +85,7 @@ int get_key_num(char *str, int *octave, int *vol)
 	return (key_num);
 }
 
-void write_wave(char *synthfile)
+void write_wave(char *synthfile, t_minisynth *track_info)
 {
 	char *line;
 	char **inst1;
@@ -95,26 +93,24 @@ void write_wave(char *synthfile)
 	int vol = 3200;
 	double freq = 440.0;
 	double duration = 1.0;
-	double tempo = 120.0;
 
-	printf("test\n");
 	FILE *f = wavfile_open("sound.wav");
 	if(!f) {
 		printf("couldn't open sound.wav for writing: %s",strerror(errno));
 		return ;
 	}
 	fd = open(synthfile, O_RDONLY);
-	printf("opened .wav file\n");
+	printf("opened .synth file\n");
 	while (get_next_line(fd, &line) > 0 && line[0] != '1')
 		;
 	//printf("%s\n", line);
+	track_info->tempo = 120.0;
 	inst1 = ft_strsplit(line, ' ');
 	int i = 1;
 	int j;
 	int octave = 1;
 	int key_num;
 	char **info;
-
 	while (inst1[i])
 	{
 		j = 0;
@@ -122,14 +118,13 @@ void write_wave(char *synthfile)
 		key_num = get_key_num(info[0], &octave, &vol);
 		if (info[1])
 			duration = atof(info[1]);
-		duration *= 60.0/tempo;
+		duration *= 60.0/track_info->tempo;
 		freq = 440.0 * pow(2.0, ((double)(key_num - 49) / 12.0));
 		add_note(freq, duration, vol, f);
 		vol = 3200;
 		//freeall(info);
 		i++;
 	}
-
 	//freeall(inst1);
 	close(fd);
 	wavfile_close(f);

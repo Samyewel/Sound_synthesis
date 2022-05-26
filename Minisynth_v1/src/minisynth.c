@@ -6,26 +6,22 @@
 /*   By: swilliam <swilliam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 14:21:56 by swilliam          #+#    #+#             */
-/*   Updated: 2022/05/26 18:32:23 by swilliam         ###   ########.fr       */
+/*   Updated: 2022/05/26 19:36:52 by swilliam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minisynth.h"
 
-/*
-** ft_strdel:
-** - Takes as a parameter the address of a string that need to be
-**   freed with free(3), then sets its pointer to NULL.
-*/
-
-void	ft_strdel(char **as)
+void	end_process(char *error_message)
 {
-	if (as != NULL)
+	if (error_message)
 	{
-		free(*as);
-		*as = NULL;
+		dprintf(STDERR_FILENO, "\e[4;31m[ERROR]\e[0m \e[4;37m%s\n\e[0m", error_message);
+		return (exit(EXIT_FAILURE));
 	}
+	return (exit(EXIT_SUCCESS));
 }
+
 /*
 static void	parse_synthfile(const char *synthfile)
 {
@@ -61,17 +57,21 @@ static int	get_filename_ext(const char *filename)
 
 int	main(int argc, char **argv)
 {
+	t_minisynth *track_info;
+
+	track_info = (t_minisynth *)malloc(sizeof(t_minisynth));
 	if (argc == 2)
 	{
 		if (get_filename_ext(argv[1]) == 1)
 			if (playback(argv[1]) == 0)
-				return (1);
+				end_process(NULL);
 		if (get_filename_ext(argv[1]) == 2)
-			write_wave(argv[1]);
+			write_wave(argv[1], track_info);
 		if (get_filename_ext(argv[1]) == 0)
-			return ((int) write(1, "Incorrect filetype used.\n", 25));
+			end_process("Incorrect file type used.");
 	}
 	else
-		return ((int)write(1, "usage: ./minisynth file\n", 24));
+		end_process("Usage: ./minisynth *.wav / *.synth");
+	end_process(NULL);
 	return (0);
 }
