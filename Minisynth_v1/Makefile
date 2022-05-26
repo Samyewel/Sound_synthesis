@@ -15,9 +15,8 @@ Flags = -Wall -Wextra -Werror
 all: $(NAME)
 
 $(NAME):	$(SOURCE_FILES)
-			make -C libft/ fclean && make -C libft/ all
+			make -C libft/ all
 			gcc $(FLAGS) $(SOURCE_FILES) $(ADD_LIBFT) -o $(NAME)
-			make clean
 
 clean:
 			make -C libft/ clean

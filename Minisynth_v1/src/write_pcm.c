@@ -106,7 +106,7 @@ void write_wave(char *synthfile)
 	fd = open(synthfile, O_RDONLY);
 	printf("opened .wav file\n");
 	while (get_next_line(fd, &line) > 0 && line[0] != '1')
-		;;
+		;
 	//printf("%s\n", line);
 	inst1 = ft_strsplit(line, ' ');
 	int i = 1;
@@ -133,6 +133,7 @@ void write_wave(char *synthfile)
 	//freeall(inst1);
 	close(fd);
 	wavfile_close(f);
+	printf("fd and wav file closed successfully");
 	return ;
 }
 //gcc -Wall write_pcm.c wavfile/wavfile.c -L libft/ -lft -o test -lm && ./test Super_Mario.synth
