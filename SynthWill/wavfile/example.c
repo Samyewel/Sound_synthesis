@@ -35,6 +35,7 @@ int main()
 	int q = 0;
 	for (j = 1; j < 5; j++)
 	{
+		
 		for(i=1;i<NUM_SAMPLES;i++) 
 		{
 			double t = (double) i / WAVFILE_SAMPLES_PER_SECOND;
