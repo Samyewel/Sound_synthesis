@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minisynth.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sam <sam@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: wdonnell <wdonnell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 14:21:56 by swilliam          #+#    #+#             */
-/*   Updated: 2022/05/27 14:21:26 by sam              ###   ########.fr       */
+/*   Updated: 2022/05/27 15:51:10 by wdonnell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,15 @@ int	main(int argc, char **argv)
 {
 	if (argc == 2 && get_filename_ext(argv[1]) == 2)
 		if (write_wave(argv[1]))
+		{
+			printf("here\n");
 			play_output();
+		}
 		else
 			end_process("Writing failed.");
 	else
 		end_process("Usage: ./minisynth *.wav / *.synth");
 	end_process(NULL);
+	system("rm -f output/*.wav");
 	return (0);
 }
