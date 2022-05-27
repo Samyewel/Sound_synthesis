@@ -6,7 +6,7 @@
 /*   By: wdonnell <wdonnell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 14:21:56 by swilliam          #+#    #+#             */
-/*   Updated: 2022/05/27 15:51:10 by wdonnell         ###   ########.fr       */
+/*   Updated: 2022/05/27 16:28:48 by wdonnell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ void	play_output(void)
 	struct dirent	*dir;
 	char			**files;
 	int				filecount;
-
+	char *str = "output/";
+	char *new;
 	filecount = 0;
 	d = opendir("output");
 	if (d)
@@ -53,11 +54,14 @@ void	play_output(void)
 		{
 			if (dir->d_type == DT_REG && get_filename_ext(dir->d_name) == 1)
 			{
-				files[filecount] = dir->d_name;
+				new = ft_strjoin(str, dir->d_name);
+				files[filecount] = ft_strdup(new);
+				ft_strdel(&new);
 				printf("file %d = %s\n", filecount, files[filecount]);
 				filecount++;
 			}
 		}
+		printf("filecount %d\n", filecount );
 		if (filecount >= 1)
 			if (simple_mixing(filecount, files) == 0)
 				printf("Output mixing complete.\n");
@@ -67,10 +71,12 @@ void	play_output(void)
 
 int	main(int argc, char **argv)
 {
+	system("rm -f output/*.wav");
+
 	if (argc == 2 && get_filename_ext(argv[1]) == 2)
 		if (write_wave(argv[1]))
 		{
-			printf("here\n");
+			printf("begin play\n");
 			play_output();
 		}
 		else
@@ -78,6 +84,6 @@ int	main(int argc, char **argv)
 	else
 		end_process("Usage: ./minisynth *.wav / *.synth");
 	end_process(NULL);
-	system("rm -f output/*.wav");
+	
 	return (0);
 }

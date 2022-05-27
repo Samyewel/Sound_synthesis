@@ -108,14 +108,15 @@ int simple_mixing(int filecount, char** files)
         return -1;
     }
 
-    g_decoderCount   = filecount-1;
+    //g_decoderCount   = filecount-1;
+    g_decoderCount   = filecount;
     g_pDecoders      = (ma_decoder*)malloc(sizeof(*g_pDecoders)      * g_decoderCount);
     g_pDecodersAtEnd = (ma_bool32*) malloc(sizeof(*g_pDecodersAtEnd) * g_decoderCount);
 
     /* In this example, all decoders need to have the same output format. */
     decoderConfig = ma_decoder_config_init(SAMPLE_FORMAT, CHANNEL_COUNT, SAMPLE_RATE);
-    for (iDecoder = 0; iDecoder < g_decoderCount; ++iDecoder) {
-        result = ma_decoder_init_file(files[1+iDecoder], &decoderConfig, &g_pDecoders[iDecoder]);
+    for (iDecoder = 0; iDecoder < g_decoderCount - 1; ++iDecoder) {
+        result = ma_decoder_init_file(files[iDecoder], &decoderConfig, &g_pDecoders[iDecoder]);
         if (result != MA_SUCCESS) {
             ma_uint32 iDecoder2;
             for (iDecoder2 = 0; iDecoder2 < iDecoder; ++iDecoder2) {
