@@ -115,7 +115,7 @@ int simple_mixing(int filecount, char** files)
 
     /* In this example, all decoders need to have the same output format. */
     decoderConfig = ma_decoder_config_init(SAMPLE_FORMAT, CHANNEL_COUNT, SAMPLE_RATE);
-    for (iDecoder = 0; iDecoder < g_decoderCount - 1; ++iDecoder) {
+    for (iDecoder = 0; iDecoder < g_decoderCount; ++iDecoder) {
         result = ma_decoder_init_file(files[iDecoder], &decoderConfig, &g_pDecoders[iDecoder]);
         if (result != MA_SUCCESS) {
             ma_uint32 iDecoder2;

@@ -47,6 +47,7 @@ void get_tracks(char *str, char **instruments)
 void add_note(double frequency, double duration, int *vol, FILE *f, char *tone)
 {
 	int length = (unsigned long long)(duration * 44100.0);
+	//int length = (unsigned long long)(duration * 14100.0);
 	short waveform[length];
 	unsigned long long i;
 
@@ -243,7 +244,7 @@ int write_wave(char *synthfile)
 		if (line[0] >= '1' && line[0] <= '9')
 		{
 			track = atoi(line);
-			//printf("write track %d %s\n\n", track, instruments[track - 1]);
+			printf("write track %d %s\n\n", track, instruments[track - 1]);
 			write_track(line, tempo, track, instruments[track - 1]);
 			free(line);
 			continue;
