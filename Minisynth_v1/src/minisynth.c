@@ -6,7 +6,7 @@
 /*   By: sam <sam@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 14:21:56 by swilliam          #+#    #+#             */
-/*   Updated: 2022/05/27 14:18:21 by sam              ###   ########.fr       */
+/*   Updated: 2022/05/27 14:21:26 by sam              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,14 @@ void	play_output(void)
 	if (d)
 	{
 		while ((dir = readdir(d)) != NULL)
+		{
 			if (dir->d_type == DT_REG && get_filename_ext(dir->d_name) == 1)
 			{
-
 				files[filecount] = dir->d_name;
 				printf("file %d = %s\n", filecount, files[filecount]);
 				filecount++;
 			}
+		}
 		if (filecount >= 1)
 			if (simple_mixing(filecount, files) == 0)
 				printf("Output mixing complete.\n");
