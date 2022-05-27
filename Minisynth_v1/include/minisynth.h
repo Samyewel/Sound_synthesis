@@ -6,7 +6,7 @@
 /*   By: sam <sam@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 14:23:20 by swilliam          #+#    #+#             */
-/*   Updated: 2022/05/27 13:53:39 by sam              ###   ########.fr       */
+/*   Updated: 2022/05/27 14:19:00 by sam              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,6 @@
 # include "../libft/includes/libft.h"
 
 # include <stdio.h>
-
-typedef struct s_minisynth
-{
-	double tempo;
-	int	tracks;
-}	t_minisynth;
-
-
-static double tempo = 0;
 /*
 const char **notes_octave = {"C0", "16.35160",
 							"C#0", "17.32391", "Db0", "17.32391",
@@ -152,7 +143,7 @@ void	end_process(char *error_message);
 /*
 ** Write to wav file
 */
-int 	write_wave(char *synthfile, t_minisynth *track_info);
+int 	write_wave(char *synthfile);
 
 /*
 ** Playback

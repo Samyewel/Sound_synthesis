@@ -6,7 +6,7 @@
 /*   By: sam <sam@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 14:21:56 by swilliam          #+#    #+#             */
-/*   Updated: 2022/05/27 14:02:30 by sam              ###   ########.fr       */
+/*   Updated: 2022/05/27 14:18:21 by sam              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	get_filename_ext(const char *filename)
     return (0);
 }
 
-void	play_output(t_minisynth *track_info)
+void	play_output(void)
 {
 	DIR				*d;
 	struct dirent	*dir;
@@ -66,12 +66,9 @@ void	play_output(t_minisynth *track_info)
 
 int	main(int argc, char **argv)
 {
-	t_minisynth *track_info;
-
-	track_info = (t_minisynth *)malloc(sizeof(t_minisynth));
 	if (argc == 2 && get_filename_ext(argv[1]) == 2)
-		if (write_wave(argv[1], track_info))
-			play_output(track_info);
+		if (write_wave(argv[1]))
+			play_output();
 		else
 			end_process("Writing failed.");
 	else

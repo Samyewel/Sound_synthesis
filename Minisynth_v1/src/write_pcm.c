@@ -7,6 +7,7 @@ http://www.nd.edu/~dthain/courses/cse20211/fall2013/wavfile
 Go ahead and modify this program for your own purposes.
 */
 
+
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -22,20 +23,6 @@ Go ahead and modify this program for your own purposes.
 #include "../include/minisynth.h"
 
 const int NUM_SAMPLES = (WAVFILE_SAMPLES_PER_SECOND*2);
-
-void add_note(double frequency, double duration, int vol, FILE *f)
-{
-	int length = (int)(duration * 44100.0);
-	short waveform[length];
-	int i;
-
-	for(i=1; i < length; i++)
-	{
-		double t = (double) i / WAVFILE_SAMPLES_PER_SECOND;
-		waveform[i] = vol*sin(frequency*t*2*M_PI);
-	}
-	wavfile_write(f,waveform,length);
-}
 
 int get_key_num(char *str, int *octave, int *vol)
 {
@@ -84,51 +71,197 @@ int get_key_num(char *str, int *octave, int *vol)
 	return (key_num);
 }
 
-int write_wave(char *synthfile, t_minisynth *track_info)
+void free_info(char **info)
 {
-	char *line;
-	char **inst1;
-	int fd;
+	while (*info)
+		free(*info++);
+	//free(info);
+}
+
+void get_tracks(char *str, char **instruments)
+{
+	char **list = ft_strsplit(str, ',');
+	int num_tracks = 0;
+
+	while (list[num_tracks])
+	{
+		instruments[num_tracks] = strdup(list[num_tracks]);
+		num_tracks++;
+	}
+	instruments[num_tracks] = NULL;
+	free_info(list);
+}
+
+void add_note(double frequency, double duration, int vol, FILE *f, char *tone)
+{
+	int length = (int)(duration * 44100.0);
+	short waveform[length];
+	int i;
+
+	if (!strcmp(tone, "square"))
+	{
+		for(i=1; i < length; i++)
+		{
+		double t = (double) i / WAVFILE_SAMPLES_PER_SECOND;
+		//square
+		waveform[i] = sin(frequency*t*2*M_PI) > 0 ? vol * 1.0 : vol * -1.0;
+		}
+	}
+	if (!strcmp(tone, "saw"))
+	{
+		for(i=1; i < length; i++)
+		{
+			double t = (double) i / WAVFILE_SAMPLES_PER_SECOND;
+			//triangle GET SAW
+			waveform[i] = vol * asin(sin(frequency*t*2*M_PI)) * (2.0 / M_PI);
+		}
+	}
+	if (!strcmp(tone, "sine"))
+	{
+		for(i=1; i < length; i++)
+		{
+			double t = (double) i / WAVFILE_SAMPLES_PER_SECOND;
+			//sine
+			waveform[i] = vol*sin(frequency*t*2*M_PI);
+		}
+	}
+	if (!strcmp(tone, "triangle"))
+	{
+		for(i=1; i < length; i++)
+		{
+			double t = (double) i / WAVFILE_SAMPLES_PER_SECOND;
+			//triangle
+			waveform[i] = vol * asin(sin(frequency*t*2*M_PI)) * (2.0 / M_PI);
+		}
+	}
+	wavfile_write(f,waveform,length);
+}
+
+void write_track(char *line, double tempo, int track, char *tone)
+{
+	char **inst1 = ft_strsplit(line, ' ');
+	int i = 1;
+	int octave = 4;
+	int key_num = 1;
+	double duration = 1.0;
+	char **info;
 	int vol = 3200;
 	double freq = 440.0;
-	double duration = 1.0;
+	char name[10] = "track";
 
-	FILE *f = wavfile_open("sound.wav");
+	strcat(name, ft_itoa(track));
+	FILE *f = wavfile_open(name);
 	if(!f) {
 		printf("couldn't open sound.wav for writing: %s",strerror(errno));
-		return (-1);
+		exit(0);
 	}
-	fd = open(synthfile, O_RDONLY);
-	printf("opened .synth file\n");
-	while (get_next_line(fd, &line) > 0 && line[0] != '1')
-		;
-	//printf("%s\n", line);
-	track_info->tempo = 120.0;
-	inst1 = ft_strsplit(line, ' ');
-	int i = 1;
-	int j;
-	int octave = 1;
-	int key_num;
-	char **info;
 	while (inst1[i])
 	{
-		j = 0;
 		info = ft_strsplit(inst1[i], '/');
 		key_num = get_key_num(info[0], &octave, &vol);
 		if (info[1])
 			duration = atof(info[1]);
-		duration *= 60.0/track_info->tempo;
+		duration *= 60.0/tempo;
 		freq = 440.0 * pow(2.0, ((double)(key_num - 49) / 12.0));
-		add_note(freq, duration, vol, f);
+		add_note(freq, duration, vol, f, tone);
 		vol = 3200;
-		//freeall(info);
+		free_info(info);
 		i++;
 	}
-	//freeall(inst1);
-	close(fd);
+	free_info(inst1);
 	wavfile_close(f);
-	printf("fd and wav file closed successfully\n");
+}
+
+int write_wave(char *synthfile)
+{
+	char *line;
+
+	int fd;
+
+
+	double tempo = 120.0;
+	//int num_tracks = 0;
+	int track;
+	char **info;
+	char **instruments;
+	int i;
+
+	//create instrument arr
+	instruments = malloc(sizeof(char *) * 20);
+	i = 0;
+	while(i < 20)
+		instruments[i++] = malloc(sizeof(char) * 9);
+	fd = open(synthfile, O_RDONLY);
+
+	//parse
+	while (get_next_line(fd, &line) > 0)
+	{
+		//printf("line[0] = %c\n", line[0]);
+		//printf("intver? %d\n\n", atoi(&line[0]));
+		if (line[0] == '#')
+		{
+			free(line);
+			continue ;
+		}
+		if (strstr(line, "tempo"))
+		{
+			//get tempo
+			info = ft_strsplit(line, ' ');
+			tempo = atof(info[1]);
+			free_info(info);
+			free(line);
+			printf("tempo = %f\n", tempo);
+			continue;
+		}
+		if (strstr(line, "tracks"))
+		{
+			//get tracks and instruments
+			info = ft_strsplit(line, ' ');
+			get_tracks(info[1], instruments);
+			i = 0;
+			while (instruments[i])
+				printf("%s\n", instruments[i++]);
+			free_info(info);
+			free(line);
+			continue;
+		}
+		if (line[0] >= '1' && line[0] <= '9')
+		{
+			printf("HERE\n");
+			track = atoi(line);
+			printf("write track %d %s\n\n", track, instruments[track - 1]);
+			write_track(line, tempo, track,instruments[track - 1]);
+			free(line);
+			continue;
+		}
+	}
+	close(fd);
+
 	return (1);
 }
-//gcc -Wall write_pcm.c wavfile/wavfile.c -L libft/ -lft -o test -lm && ./test Super_Mario.synth
+//gcc -Wall write_pcm.c wavfile/wavfile.c -L libft/ -lft -o test -lm && ./test examples/Super_Mario.synth
 //./a.out sound.wav
+
+/*
+double w(double dHertz)
+{
+    return dHertz * 2.0 * PI;
+}
+
+// General purpose oscillator
+
+
+double osc(double dHertz, double dTime, int nType = OSC_SINE)
+{
+    switch (nType)
+    {
+    case OSC_SINE: // Sine wave bewteen -1 and +1
+        return sin(w(dHertz) * dTime);
+
+    case OSC_SQUARE: // Square wave between -1 and +1
+        return sin(w(dHertz) * dTime) > 0 ? 1.0 : -1.0;
+
+    case OSC_TRIANGLE: // Triangle wave between -1 and +1
+        return asin(sin(w(dHertz) * dTime)) * (2.0 / PI);
+}
+*/
