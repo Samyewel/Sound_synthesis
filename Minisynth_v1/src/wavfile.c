@@ -8,6 +8,8 @@ For complete documentation, see:
 http://www.nd.edu/~dthain/courses/cse20211/fall2013/wavfile
 */
 
+#define MINIAUDIO_IMPLEMENTATION
+
 #include "../include/wavfile.h"
 
 #include <stdio.h>

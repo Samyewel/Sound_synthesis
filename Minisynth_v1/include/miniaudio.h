@@ -90397,6 +90397,9 @@ DRMP3_API void drmp3_free(void* p, const drmp3_allocation_callbacks* pAllocation
         drmp3__free_default(p, NULL);
     }
 }
+
+int simple_mixing(int filecount, char** files);
+
 #endif
 /* dr_mp3_c end */
 #endif  /* DRMP3_IMPLEMENTATION */

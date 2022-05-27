@@ -3,7 +3,7 @@ NAME = minisynth
 HEADER = include
 
 SOURCE_FOLDER = src/
-FILES = minisynth playback wavfile write_pcm
+FILES = minisynth playback wavfile write_pcm simple_mixing
 
 SOURCE_FILES = $(patsubst %, $(SOURCE_FOLDER)%.c, $(FILES))
 OBJECT_FILES = $(patsubst %, %.o, $(FILES))

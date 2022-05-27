@@ -7,7 +7,6 @@ http://www.nd.edu/~dthain/courses/cse20211/fall2013/wavfile
 Go ahead and modify this program for your own purposes.
 */
 
-
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -85,7 +84,7 @@ int get_key_num(char *str, int *octave, int *vol)
 	return (key_num);
 }
 
-void write_wave(char *synthfile, t_minisynth *track_info)
+int write_wave(char *synthfile, t_minisynth *track_info)
 {
 	char *line;
 	char **inst1;
@@ -97,7 +96,7 @@ void write_wave(char *synthfile, t_minisynth *track_info)
 	FILE *f = wavfile_open("sound.wav");
 	if(!f) {
 		printf("couldn't open sound.wav for writing: %s",strerror(errno));
-		return ;
+		return (-1);
 	}
 	fd = open(synthfile, O_RDONLY);
 	printf("opened .synth file\n");
@@ -128,8 +127,8 @@ void write_wave(char *synthfile, t_minisynth *track_info)
 	//freeall(inst1);
 	close(fd);
 	wavfile_close(f);
-	printf("fd and wav file closed successfully");
-	return ;
+	printf("fd and wav file closed successfully\n");
+	return (1);
 }
 //gcc -Wall write_pcm.c wavfile/wavfile.c -L libft/ -lft -o test -lm && ./test Super_Mario.synth
 //./a.out sound.wav

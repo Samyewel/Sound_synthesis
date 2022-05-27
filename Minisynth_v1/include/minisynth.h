@@ -3,25 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   minisynth.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: swilliam <swilliam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sam <sam@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 14:23:20 by swilliam          #+#    #+#             */
-/*   Updated: 2022/05/26 19:38:34 by swilliam         ###   ########.fr       */
+/*   Updated: 2022/05/27 13:53:39 by sam              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISYNTH_H
-
 #define MINISYNTH_H
-#define MINIAUDIO_IMPLEMENTATION
+
+# include "../libft/includes/get_next_line.h"
+# include "../libft/includes/libft.h"
 
 # include <stdio.h>
-# include <string.h>
-# include <stdarg.h>
-# include <stdlib.h>
-# include <fcntl.h>
-# include <inttypes.h>
-# include <unistd.h>
 
 typedef struct s_minisynth
 {
@@ -157,15 +152,16 @@ void	end_process(char *error_message);
 /*
 ** Write to wav file
 */
-void write_wave(char *synthfile, t_minisynth *track_info);
+int 	write_wave(char *synthfile, t_minisynth *track_info);
 
 /*
 ** Playback
 */
-int playback(char *file);
-FILE * wavfile_open( const char *filename );
-void wavfile_write( FILE *file, short data[], int length );
-void wavfile_close( FILE * file );
+int		playback(char *file);
+FILE *	wavfile_open(const char *filename);
+void 	wavfile_write(FILE *file, short data[], int length);
+void 	wavfile_close(FILE *file);
+int	 	simple_mixing(int filecount, char **files);
 
 #define WAVFILE_SAMPLES_PER_SECOND 44100
 

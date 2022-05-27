@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   minisynth.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: swilliam <swilliam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sam <sam@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 14:21:56 by swilliam          #+#    #+#             */
-/*   Updated: 2022/05/26 19:36:52 by swilliam         ###   ########.fr       */
+/*   Updated: 2022/05/27 14:02:30 by sam              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minisynth.h"
+#include <dirent.h>
 
 void	end_process(char *error_message)
 {
@@ -21,24 +22,6 @@ void	end_process(char *error_message)
 	}
 	return (exit(EXIT_SUCCESS));
 }
-
-/*
-static void	parse_synthfile(const char *synthfile)
-{
-	char	*track;
-	int	fd;
-	int	i;
-
-	fd = 0;
-	i = 1;
-
-	fd = open(synthfile, O_RDONLY);
-	while (i > 0)
-	{
-
-	}
-	printf("parse here\n");
-}*/
 
 static int	get_filename_ext(const char *filename)
 {
@@ -55,21 +38,42 @@ static int	get_filename_ext(const char *filename)
     return (0);
 }
 
+void	play_output(t_minisynth *track_info)
+{
+	DIR				*d;
+	struct dirent	*dir;
+	char			**files;
+	int				filecount;
+
+	filecount = 0;
+	d = opendir("output");
+	if (d)
+	{
+		while ((dir = readdir(d)) != NULL)
+			if (dir->d_type == DT_REG && get_filename_ext(dir->d_name) == 1)
+			{
+
+				files[filecount] = dir->d_name;
+				printf("file %d = %s\n", filecount, files[filecount]);
+				filecount++;
+			}
+		if (filecount >= 1)
+			if (simple_mixing(filecount, files) == 0)
+				printf("Output mixing complete.\n");
+	}
+	closedir(d);
+}
+
 int	main(int argc, char **argv)
 {
 	t_minisynth *track_info;
 
 	track_info = (t_minisynth *)malloc(sizeof(t_minisynth));
-	if (argc == 2)
-	{
-		if (get_filename_ext(argv[1]) == 1)
-			if (playback(argv[1]) == 0)
-				end_process(NULL);
-		if (get_filename_ext(argv[1]) == 2)
-			write_wave(argv[1], track_info);
-		if (get_filename_ext(argv[1]) == 0)
-			end_process("Incorrect file type used.");
-	}
+	if (argc == 2 && get_filename_ext(argv[1]) == 2)
+		if (write_wave(argv[1], track_info))
+			play_output(track_info);
+		else
+			end_process("Writing failed.");
 	else
 		end_process("Usage: ./minisynth *.wav / *.synth");
 	end_process(NULL);
