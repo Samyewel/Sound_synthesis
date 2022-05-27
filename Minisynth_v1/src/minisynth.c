@@ -6,7 +6,7 @@
 /*   By: wdonnell <wdonnell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 14:21:56 by swilliam          #+#    #+#             */
-/*   Updated: 2022/05/27 16:55:20 by wdonnell         ###   ########.fr       */
+/*   Updated: 2022/05/27 17:20:12 by wdonnell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,6 @@ int	main(int argc, char **argv)
 	else
 		end_process("Usage: ./minisynth *.wav / *.synth");
 	end_process(NULL);
-	
+	system("rm -f output/*.wav");
 	return (0);
 }

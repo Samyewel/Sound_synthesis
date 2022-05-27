@@ -244,7 +244,7 @@ int write_wave(char *synthfile)
 		if (line[0] >= '1' && line[0] <= '9')
 		{
 			track = atoi(line);
-			printf("write track %d %s\n\n", track, instruments[track - 1]);
+			//printf("write track %d %s\n\n", track, instruments[track - 1]);
 			write_track(line, tempo, track, instruments[track - 1]);
 			free(line);
 			continue;
