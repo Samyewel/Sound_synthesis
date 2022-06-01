@@ -17,6 +17,7 @@ all: $(NAME)
 $(NAME):	$(SOURCE_FILES)
 			make -C libft/ all
 			gcc $(FLAGS) $(SOURCE_FILES) $(ADD_LIBFT) -o $(NAME)
+			mkdir output
 
 clean:
 			make -C libft/ clean
@@ -24,6 +25,7 @@ clean:
 
 fclean:		clean
 			rm -f $(NAME)
+			rm -rf output
 			make -C libft/ fclean
 
 re:			fclean all
